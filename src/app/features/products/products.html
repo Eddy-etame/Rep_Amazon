@@ -38,12 +38,12 @@
     <aside class="filters">
       <h3>Filtres</h3>
       <div class="filter-group">
-        <label>Prix min (FCFA)</label>
-        <input type="number" [(ngModel)]="priceMin" placeholder="Min" min="0" />
+        <label>Prix min</label>
+        <input type="number" [(ngModel)]="priceMinInput" placeholder="Min" min="0" />
       </div>
       <div class="filter-group">
-        <label>Prix max (FCFA)</label>
-        <input type="number" [(ngModel)]="priceMax" placeholder="Max" min="0" />
+        <label>Prix max</label>
+        <input type="number" [(ngModel)]="priceMaxInput" placeholder="Max" min="0" />
       </div>
       <div class="filter-group">
         <label>Catégorie</label>
@@ -51,15 +51,25 @@
           <button
             type="button"
             class="filter-cat"
-            [class.active]="selectedCategory === cat"
-            (click)="selectCategory(selectedCategory === cat ? null : cat)"
+            [class.active]="categoryFilter === cat"
+            (click)="categoryFilter = categoryFilter === cat ? null : cat"
           >
             {{ cat }}
           </button>
         }
       </div>
+      <div class="filter-actions">
+        <button type="button" class="btn-apply" (click)="applyFilters()">Appliquer</button>
+        <button type="button" class="btn-reset" (click)="resetFilters()">Réinitialiser</button>
+      </div>
     </aside>
     <div class="grid">
+    @if (filteredProducts.length === 0) {
+      <p class="empty-state">
+        Aucun produit trouvé{{ searchTerm ? ' pour « ' + searchTerm + ' »' : '' }}.
+        Essayez de modifier vos filtres ou votre recherche.
+      </p>
+    }
     @for (product of filteredProducts; track product.id) {
       <article class="product-card" [routerLink]="['/produits', product.id]">
         <button
@@ -86,9 +96,9 @@
           <p class="meta">{{ product.categorie }} • {{ product.ville }}</p>
           <p class="price">
             @if (product.prixBarre) {
-              <span class="barre">{{ product.prixBarre | number:'1.0-0' }} FCFA</span>
+              <span class="barre">{{ product.prixBarre | amazCurrency }}</span>
             }
-            {{ product.prix | number:'1.0-0' }} FCFA
+            {{ product.prix | amazCurrency }}
           </p>
           <p class="description">{{ product.descriptionCourte }}</p>
         </div>

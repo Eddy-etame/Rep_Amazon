@@ -1,9 +1,35 @@
-<section class="carousel">
+<section
+  class="carousel"
+  (mouseenter)="onCarouselMouseEnter()"
+  (mouseleave)="onCarouselMouseLeave()"
+>
+  <button type="button" class="carousel-btn carousel-btn-prev" (click)="prevSlide()" aria-label="Slide précédent">
+    ‹
+  </button>
   <div class="carousel-inner">
     @for (slide of carouselSlides; track slide.id) {
-      <a [routerLink]="slide.link" class="carousel-slide" [style.backgroundImage]="'url(' + slide.image + ')'">
+      <a
+        [routerLink]="slide.link"
+        class="carousel-slide"
+        [class.active]="currentSlideIndex === $index"
+        [style.backgroundImage]="'url(' + slide.image + ')'"
+      >
         <span class="carousel-title">{{ slide.title }}</span>
       </a>
+    }
+  </div>
+  <button type="button" class="carousel-btn carousel-btn-next" (click)="nextSlide()" aria-label="Slide suivant">
+    ›
+  </button>
+  <div class="carousel-indicators">
+    @for (slide of carouselSlides; track slide.id) {
+      <button
+        type="button"
+        class="indicator"
+        [class.active]="currentSlideIndex === $index"
+        (click)="goToSlide($index)"
+        [attr.aria-label]="'Aller au slide ' + ($index + 1)"
+      ></button>
     }
   </div>
 </section>
@@ -76,9 +102,9 @@
         <p class="meta">{{ item.categorie }} • {{ item.ville }}</p>
         <p class="price">
           @if (getProduct(item.id)?.prixBarre) {
-            <span class="barre">{{ getProduct(item.id)!.prixBarre! | number:'1.0-0' }} FCFA</span>
+            <span class="barre">{{ getProduct(item.id)!.prixBarre! | amazCurrency }}</span>
           }
-          {{ item.prix | number:'1.0-0' }} FCFA
+          {{ item.prix | amazCurrency }}
         </p>
       </article>
     }
